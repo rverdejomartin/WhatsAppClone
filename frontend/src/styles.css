@@ -1,0 +1,114 @@
+/* ================================
+   VARIABLES GLOBALES
+   ================================ */
+:root {
+    /* Colores principales */
+    --color-primary: #00a884;
+    --color-primary-dark: #008f72;
+
+    /* Burbujas de chat */
+    --color-burbuja-propia: #d9fdd3;
+    --color-burbuja-ajena: #ffffff;
+
+    /* Fondos */
+    --color-fondo-app: #111b21;
+    --color-fondo-chat: #efeae2;
+    --color-fondo-sidebar: #111b21;
+    --color-fondo-header: #202c33;
+    --color-fondo-input: #2a3942;
+
+    /* Textos */
+    --color-texto-claro: #e9edef;
+    --color-texto-gris: #8696a0;
+    --color-texto-oscuro: #111b21;
+
+    /* Bordes */
+    --color-borde: #2a3942;
+
+    /* Tamaños de layout */
+    --ancho-sidebar: 380px;
+    --alto-header: 60px;
+    --alto-input: 62px;
+
+    /* Tipografía */
+    --fuente: 'Segoe UI', system-ui, sans-serif;
+}
+
+/* ================================
+   RESET BASE
+   ================================ */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html,
+body,
+#app {
+    height: 100%;
+    overflow: hidden;
+    font-family: var(--fuente);
+}
+
+body {
+    background-color: var(--color-fondo-app);
+    color: var(--color-texto-claro);
+}
+
+button {
+    cursor: pointer;
+    border: none;
+    background: none;
+    font-family: var(--fuente);
+}
+
+input {
+    font-family: var(--fuente);
+    border: none;
+    outline: none;
+}
+
+/* ================================
+   SCROLLBAR
+   ================================ */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: var(--color-borde);
+    border-radius: 9999px;
+}
+
+/* ================================
+   ANIMACIONES
+   ================================ */
+
+/* Mensajes nuevos entran con un pequeño deslizamiento */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Puntos del "escribiendo..." */
+@keyframes typing-dot {
+
+    0%,
+    100% {
+        transform: translateY(0);
+        opacity: 0.4;
+    }
+
+    50% {
+        transform: translateY(-4px);
+        opacity: 1;
+    }
+}
