@@ -39,7 +39,7 @@ io.on('connection', (socket) => {
         socket.broadcast.emit('nuevo_mensaje', {
             tipo: 'mensaje',
             socketId: socket.id,
-            nombre = datos.nombre,
+            nombre: datos.nombre,
             avatar: datos.avatar,
             texto: datos.texto
         })

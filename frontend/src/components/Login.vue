@@ -20,11 +20,11 @@ const avatares = [
 ];
 
 function entrar() {
-    if (nombre.value.trim() && avatarElegido.value) {
+    if (nombre.value.trim() && avatarElegido.value !== null) {
         //se emite el registro al server
         socket.emit('registro', {
             nombre: nombre.value.trim(),
-            avatar: avatarElegido.value
+            avatar: avatares[avatarElegido.value]
         });
 
         //navegamos con el router pasando los parametros del socket
@@ -63,10 +63,11 @@ function entrar() {
                 <label>Tu avatar</label>
                 <div class="avatares">
                     <img
-                        v-for="avatar in avatares"
+                        v-for="(avatar,index) in avatares"
                         :key="avatar"
                         :src="avatar"
-                        :class="['avatar', {seleccionado: avatarElegido === avatar}]"
+                        :class="['avatar', {seleccionado: avatarElegido === index}]"
+                        @click="avatarElegido = index"
                     />
                     <!--el img :class nos agrega la classe de manera condicional para los estilos-->
                 </div>
