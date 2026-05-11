@@ -137,16 +137,26 @@ function escribiendo() {
 .escribiendo {
     height: 0;
     overflow: hidden;
-    background-color: var(--color-fondo-chat);
     padding: 0 1rem;
-    font-size: 0.8rem;
-    color: var(--color-primary);
     transition: height 0.2s ease, padding 0.2s ease;
     flex-shrink: 0;
+    background-color: var(--color-fondo-chat);
+    display: flex;
+    align-items: center;
 }
 
 .escribiendo.visible {
-    height: 28px;
-    padding: 0.3rem 1rem;
+    height: 36px;
+    padding: 0.25rem 1rem;
+}
+
+.escribiendo span {
+    font-size: 0.78rem;
+    font-style: italic;
+    color: var(--color-primary);
+    background-color: rgba(0, 168, 132, 0.12);
+    padding: 0.2rem 0.75rem;
+    border-radius: 9999px;
+    border: 1px solid rgba(0, 168, 132, 0.25);
 }
 </style>
