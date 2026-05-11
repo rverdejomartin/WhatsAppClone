@@ -4,7 +4,7 @@ import Chat from "../components/Chat.vue";
 
 const routes = [
     { path: '/', name: 'login', component: Login },
-    { path: '/chat/:nombre/:avatar', name: 'chat', component: Chat } //cambio sugerido por la IA necesario para que se actualice correctamente
+    { path: '/chat/:nombre/:avatar', name: 'chat', component: Chat, props: true } //cambio sugerido por la IA necesario para que se actualice correctamente
 ];
 
 const router = createRouter({

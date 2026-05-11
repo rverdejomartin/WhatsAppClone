@@ -4,7 +4,7 @@ import socket from '../socket/socket';
 
 //componentes
 import ListaMensajes from './ListaMensajes.vue';
-import InputMesaje from './InputMensaje.vue';
+import InputMensaje from './InputMensaje.vue';
 import Sidebar from './Sidebar.vue';
 
 //las props que traemos del router
@@ -47,7 +47,7 @@ socket.on('usuario_escribiendo', (nombre) => {
 
 //funciones
 function enviarMensaje(texto) {
-    mensajes.value.psuch({
+    mensajes.value.push({
         tipo: 'mensaje',
         socketId: socket.id,
         nombre: props.nombre,
@@ -88,10 +88,10 @@ function escribiendo() {
             />
 
             <div class="escribiendo" :class="{visible: quienEscribe}">
-                <span v-if="quienEscribe">{{ quienEscribe }} esta escribiendo...</span>
+                <span>{{ quienEscribe }} está escribiendo...</span>
             </div>
 
-            <InputMesaje
+            <InputMensaje
                 @enviar="enviarMensaje"
                 @escribir="escribiendo"
             />
@@ -132,5 +132,21 @@ function escribiendo() {
 .chat-online {
     font-size: 0.8rem;
     color: var(--color-primary);
+}
+
+.escribiendo {
+    height: 0;
+    overflow: hidden;
+    background-color: var(--color-fondo-chat);
+    padding: 0 1rem;
+    font-size: 0.8rem;
+    color: var(--color-primary);
+    transition: height 0.2s ease, padding 0.2s ease;
+    flex-shrink: 0;
+}
+
+.escribiendo.visible {
+    height: 28px;
+    padding: 0.3rem 1rem;
 }
 </style>

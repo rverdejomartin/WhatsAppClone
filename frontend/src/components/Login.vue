@@ -21,20 +21,20 @@ const avatares = [
 
 function entrar() {
     if (nombre.value.trim() && avatarElegido.value !== null) {
-        //se emite el registro al server
-        socket.emit('registro', {
-            nombre: nombre.value.trim(),
-            avatar: avatares[avatarElegido.value]
-        });
+      //se emite el registro al server y se conecta
+      socket.emit('registro', {
+          nombre: nombre.value.trim(),
+          avatar: avatares[avatarElegido.value]
+      });
 
-        //navegamos con el router pasando los parametros del socket
-        router.push({
-            name: 'chat',
-            params: {
-                nombre: nombre.value.trim(),
-                avatar: avatarElegido.value
-            }
-        });
+      //navegamos con el router pasando los parametros del socket
+      router.push({
+          name: 'chat',
+          params: {
+              nombre: nombre.value.trim(),
+              avatar: avatarElegido.value
+          }
+      });
     } else
         error.value = 'Faltan parametros para el registro.';
 }
