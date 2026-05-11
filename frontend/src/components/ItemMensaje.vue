@@ -12,12 +12,12 @@ defineProps({
     </div>
 
     <div v-else class="mensaje-wrapper" :class="esMio ? 'derecha' : 'izquierda'">
-        <img :src="mensaje.avatar" class="avatar">
-    </div>
+        <img v-if="!esMio" :src="mensaje.avatar" class="avatar">
 
-    <div class="burbuja" :class="esMio ? 'burbuja-propia' : 'burbuja-ajena'">
-        <span v-if="esMio" class="nombre">{{ mensaje.nombre }}</span>
-        <p class="texto">{{ mensaje.texto }}</p>
+        <div class="burbuja" :class="esMio ? 'burbuja-propia' : 'burbuja-ajena'">
+            <span v-if="!esMio" class="nombre">{{ mensaje.nombre }}</span>
+            <p class="texto">{{ mensaje.texto }}</p>
+        </div>
     </div>
 </template>
 

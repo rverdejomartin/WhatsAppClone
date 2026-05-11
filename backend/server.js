@@ -27,11 +27,15 @@ io.on('connection', (socket) => {
         usuariosOnline++;
         io.emit('usuarios_online', usuariosOnline);
 
-        //aviso general de que alguien entró al chat
-        io.emit('nuevo_mensaje', {
+        //aviso general de que alguien entró al chat + aviso propio
+        socket.emit('nuevo_mensaje', {
+            tipo: 'sistema',
+            texto: 'Te has unido al chat'
+        });
+        socket.broadcast.emit('nuevo_mensaje', {
             tipo: 'sistema',
             texto: datos.nombre + ' se ha unido al chat'
-        })
+        });
     });
 
     //un usuario escribe un mensaje:
