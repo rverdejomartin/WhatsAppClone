@@ -22,6 +22,7 @@ const avatares = [
 function entrar() {
     if (nombre.value.trim() && avatarElegido.value !== null) {
       //se emite el registro al server y se conecta
+      socket.connect();
       socket.emit('registro', {
           nombre: nombre.value.trim(),
           avatar: avatares[avatarElegido.value]
