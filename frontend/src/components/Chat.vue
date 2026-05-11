@@ -26,7 +26,7 @@ const avatares = [
 const avatarUrl = avatares[Number(props.avatar)];
 
 const mensajes = ref([]);
-const usuariosOnline = ref(0);
+const usuariosOnline = ref([]);
 const quienEscribe = ref('');
 let timerEsribiendo = null;
 
@@ -79,7 +79,7 @@ function escribiendo() {
         <div class="chat-main">
             <div class="chat-header">
                 <span class="chat-titulo">Chat grupal</span>
-                <span class="chat-online">{{ usuariosOnline }} en línea</span>
+                <span class="chat-online">{{ usuariosOnline.length }} en línea</span>
             </div>
 
             <ListaMensajes

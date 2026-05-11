@@ -14,18 +14,27 @@ const io = new Server(server, {
     }
 });
 
-//contador de los usuarios
-let usuariosOnline = 0;
+//variable para guardar los usuarios
+let usuarios = [];
+
+function emitirUsuarios() {
+    io.emit('usuarios_online', usuarios);
+} Ç//lista actualizada para que aparezca en general a todo el mundo
 
 io.on('connection', (socket) => {
     //registro de nombre
     socket.on('registro', (datos) => {
         socket.data.nombre = datos.nombre;
         socket.data.avatar = datos.avatar;
+        socket.data.estado = datos.estado;
 
-        //una vez se registra con nombre, ese usuario pasa a estar conectado y se avisa en general
-        usuariosOnline++;
-        io.emit('usuarios_online', usuariosOnline);
+        //añadimos usuario al array 
+        usuarios.push({
+            socketId: socket.id,
+            nombre: datos.nombre,
+            avatar: datos.avatar,
+            estado: datos.estado
+        });
 
         //aviso general de que alguien entró al chat + aviso propio
         socket.emit('nuevo_mensaje', {
