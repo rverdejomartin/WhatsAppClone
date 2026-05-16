@@ -11,7 +11,7 @@ export const usuarioGlobal = ref(usuarioGuardado ? JSON.parse(usuarioGuardado) :
 })
 export const usuariosOnlineGlobal = ref([]);
 
-const socket = io('http://localhost:3000', {
+const socket = io('https://whatsappclone-myve.onrender.com', {
     autoConnect: false
 });
 

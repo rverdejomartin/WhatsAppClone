@@ -1,7 +1,10 @@
 <script setup>
 import { ref, computed } from 'vue';
+import { useRouter } from 'vue-router';
+import socket, { usuarioGlobal } from '../socket/socket';
 
 const desplegado = ref(false);
+const router = useRouter();
 const props = defineProps({
     usuariosOnline: Array,
     nombre: String,
@@ -19,7 +22,14 @@ const colorEstado = computed(() => {
         color = '#ef4444';
     }
     return color;
-})
+});
+
+function cerrarSesion() {
+    localStorage.removeItem('whatsapp_user');
+    usuarioGlobal.value = { nombre: '', avatar: '', estado: '' };
+    socket.disconnect();
+    router.push({ name: 'login' });
+}
 </script>
 
 <template>
@@ -35,6 +45,11 @@ const colorEstado = computed(() => {
                 </svg>
                 {{ estado }}</span>
         </div>
+        <button class="btn-logout" @click="cerrarSesion" title="Cerrar sesión">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5-5-5zm-5 10H5V7h7V5H5c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h7v-2z"/>
+            </svg>
+        </button>
     </div>
 
     <div class="chats">
@@ -81,7 +96,6 @@ const colorEstado = computed(() => {
     flex-shrink: 0;
 }
 
-/* Perfil */
 .perfil {
     height: var(--alto-header);
     display: flex;
@@ -98,11 +112,13 @@ const colorEstado = computed(() => {
     border-radius: 50%;
     background-color: var(--color-fondo-input);
     flex-shrink: 0;
+    object-fit: cover;
 }
 
 .perfil-info {
     display: flex;
     flex-direction: column;
+    flex: 1;
 }
 
 .perfil-nombre {
@@ -119,7 +135,29 @@ const colorEstado = computed(() => {
     gap: 0.3rem;
 }
 
-/* Lista de chats */
+.btn-logout {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: transparent;
+    color: var(--color-texto-gris);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background-color 0.15s, color 0.15s;
+}
+
+.btn-logout svg {
+    width: 20px;
+    height: 20px;
+}
+
+.btn-logout:hover {
+    background-color: #ef4444;
+    color: white;
+}
+
 .chats {
     flex: 1;
     display: flex;
@@ -210,6 +248,7 @@ const colorEstado = computed(() => {
     border-radius: 50%;
     background-color: var(--color-fondo-input);
     flex-shrink: 0;
+    object-fit: cover;
 }
 
 .usuario-info {
