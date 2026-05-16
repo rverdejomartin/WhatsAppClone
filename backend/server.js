@@ -9,7 +9,7 @@ app.use(cors());
 const server = createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: '*',
+        origin: 'https://whatsappclone-frontend-3rat.onrender.com',
         methods: ['*']
     }
 });
