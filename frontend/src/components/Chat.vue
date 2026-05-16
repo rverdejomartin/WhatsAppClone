@@ -1,100 +1,66 @@
 <script setup>
 import { ref } from 'vue';
-import socket from '../socket/socket';
-
-//componentes
+import socket, { usuarioGlobal, usuariosOnlineGlobal } from '../socket/socket';
 import ListaMensajes from './ListaMensajes.vue';
 import InputMensaje from './InputMensaje.vue';
 import Sidebar from './Sidebar.vue';
 
-//las props que traemos del router
-const props = defineProps({
-    nombre: String,
-    avatar: String
-});
-
-//mismo array de imagenes que en el login
-const avatares = [
-    'https://api.dicebear.com/7.x/thumbs/svg?seed=Felix',
-    'https://api.dicebear.com/7.x/thumbs/svg?seed=Aneka',
-    'https://api.dicebear.com/7.x/thumbs/svg?seed=Luna',
-    'https://api.dicebear.com/7.x/thumbs/svg?seed=Rocky',
-    'https://api.dicebear.com/7.x/thumbs/svg?seed=Milo',
-];
-
-//obtener de nuevo la url del svg del usuario
-const avatarUrl = avatares[Number(props.avatar)];
-
 const mensajes = ref([]);
-const usuariosOnline = ref([]);
 const quienEscribe = ref('');
 let timerEsribiendo = null;
 
-//eventos del socket
 socket.on('nuevo_mensaje', (datos) => {
     mensajes.value.push(datos);
+    if (datos.tipo === 'mensaje') {
+        quienEscribe.value = '';
+        clearTimeout(timerEsribiendo);
+    }
 });
-socket.on('usuarios_online', (cantidad) => {
-    usuariosOnline.value = cantidad;
-});
+
 socket.on('usuario_escribiendo', (nombre) => {
     quienEscribe.value = nombre;
     clearTimeout(timerEsribiendo);
-    timerEsribiendo = setTimeout(() => {
-        quienEscribe.value = '';
-    }, 2000);
+    timerEsribiendo = setTimeout(() => { quienEscribe.value = ''; }, 2000);
 });
 
-//funciones
 function enviarMensaje(texto) {
-    mensajes.value.push({
+    const nuevoMensaje = {
         tipo: 'mensaje',
         socketId: socket.id,
-        nombre: props.nombre,
-        avatar: avatarUrl,
+        nombre: usuarioGlobal.value.nombre,
+        avatar: usuarioGlobal.value.avatar,
+        texto: texto
+    };
+    mensajes.value.push(nuevoMensaje);
+    socket.emit('mensaje', {
+        nombre: usuarioGlobal.value.nombre,
+        avatar: usuarioGlobal.value.avatar,
         texto: texto
     });
-
-    socket.emit('mensaje', {
-        nombre: props.nombre,
-        avatar: avatarUrl,
-        texto: texto
-    })
 }
 
 function escribiendo() {
-    socket.emit('escribiendo', props.nombre);
+    socket.emit('escribiendo', usuarioGlobal.value.nombre);
 }
 </script>
-
 
 <template>
     <div class="chat-layout">
         <Sidebar
-            :usuariosOnline="usuariosOnline"
-            :nombre="nombre"
-            :avatarUrl="avatarUrl"
+            :usuariosOnline="usuariosOnlineGlobal"
+            :nombre="usuarioGlobal.nombre"
+            :avatarUrl="usuarioGlobal.avatar"
+            :estado="usuarioGlobal.estado"
         />
-
         <div class="chat-main">
             <div class="chat-header">
                 <span class="chat-titulo">Chat grupal</span>
-                <span class="chat-online">{{ usuariosOnline.length }} en línea</span>
             </div>
-
-            <ListaMensajes
-                :mensajes="mensajes"
-                :miSocketId="socket.id"
-            />
-
-            <div class="escribiendo" :class="{visible: quienEscribe}">
+            <ListaMensajes :mensajes="mensajes" :miSocketId="socket.id" />
+            <div class="escribiendo" :class="{ visible: quienEscribe }">
                 <span>{{ quienEscribe }} está escribiendo...</span>
             </div>
-
-            <InputMensaje
-                @enviar="enviarMensaje"
-                @escribir="escribiendo"
-            />
+            <InputMensaje @enviar="enviarMensaje" @escribir="escribiendo" />
         </div>
     </div>
 </template>

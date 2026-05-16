@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import socket from '../socket/socket';
+import socket, { usuarioGlobal } from '../socket/socket';
 
 const router = useRouter();
 
@@ -9,33 +9,37 @@ const router = useRouter();
 const nombre = ref('');
 const avatarElegido = ref(null);
 const error = ref('');
+const estadoElegido = ref('Disponible');
+const estados = [
+  { valor: 'Disponible', color: '#00a884' },
+  { valor: 'Ocupado', color: '##f59e0b' },
+  { valor: 'No molestar', color: '#ef4444' }
+];
 
-//avatares predefinidos, SVGs gratuitos
 const avatares = [
-    'https://api.dicebear.com/7.x/thumbs/svg?seed=Felix',
-    'https://api.dicebear.com/7.x/thumbs/svg?seed=Aneka',
-    'https://api.dicebear.com/7.x/thumbs/svg?seed=Luna',
-    'https://api.dicebear.com/7.x/thumbs/svg?seed=Rocky',
-    'https://api.dicebear.com/7.x/thumbs/svg?seed=Milo',
+    '/img/caballopfp.jpg',
+    '/img/finoseñores.jpg',
+    '/img/gatochadpfp.jpg',
+    '/img/gatopfp1.jpg',
+    '/img/sahur.jpg',
 ];
 
 function entrar() {
-    if (nombre.value.trim() && avatarElegido.value !== null) {
-      //se emite el registro al server y se conecta
-      socket.connect();
-      socket.emit('registro', {
-          nombre: nombre.value.trim(),
-          avatar: avatares[avatarElegido.value]
-      });
+  if (nombre.value.trim() && avatarElegido.value !== null) {
+    //guardamos los datos en el ref
+    const datosUsuario = {
+      nombre: nombre.value.trim(),
+      avatar: avatares[avatarElegido.value],
+      estado: estadoElegido.value
+    };
+    usuarioGlobal.value = datosUsuario;
+    localStorage.setItem('whatsapp_user', JSON.stringify(datosUsuario))
+    //se emite el registro al server y se conecta
+    socket.connect();
+    socket.emit('registro', datosUsuario);
 
-      //navegamos con el router pasando los parametros del socket
-      router.push({
-          name: 'chat',
-          params: {
-              nombre: nombre.value.trim(),
-              avatar: avatarElegido.value
-          }
-      });
+      //navegamos con el router
+      router.push({name: 'chat'});
     } else
         error.value = 'Faltan parametros para el registro.';
 }
@@ -72,6 +76,22 @@ function entrar() {
                     />
                     <!--el img :class nos agrega la classe de manera condicional para los estilos-->
                 </div>
+            </div>
+            <div class="campo">
+              <label>Tu estado</label>
+              <div class="estados">
+                <button
+                  v-for="estado in estados"
+                  :key="estado.valor"
+                  :class="['estado-btn', {seleccionado: estadoElegido === estado.valor}]"
+                  @click="estadoElegido = estado.valor"
+                >
+                  <svg width="12" height="12" viewBox="0 0 12 12">
+                    <circle cx="6" cy="6" r="6" :fill="estado.color"/>
+                  </svg>
+                  {{ estado.valor }}
+                </button>
+              </div>
             </div>
 
             <p v-if="error" class="error">{{ error }}</p>
@@ -173,5 +193,27 @@ h1 {
  
 .btn-entrar:hover {
   background-color: var(--color-primary-dark);
+}
+
+.estados {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.estado-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+    background-color: var(--color-fondo-input);
+    color: var(--color-texto-gris);
+    font-size: 0.85rem;
+    transition: background-color 0.15s, color 0.15s;
+}
+
+.estado-btn.seleccionado {
+    background-color: var(--color-primary);
+    color: white;
 }
 </style>

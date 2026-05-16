@@ -17,16 +17,15 @@ const io = new Server(server, {
 //variable para guardar los usuarios
 let usuarios = [];
 
-function emitirUsuarios() {
-    io.emit('usuarios_online', usuarios);
-} Ç//lista actualizada para que aparezca en general a todo el mundo
 
 io.on('connection', (socket) => {
     //registro de nombre
     socket.on('registro', (datos) => {
+        console.log('registro recibido:', datos);
         socket.data.nombre = datos.nombre;
-        socket.data.avatar = datos.avatar;
-        socket.data.estado = datos.estado;
+
+        //evita duplicados si el array ya tiene el socketid
+        usuarios = usuarios.filter(u => u.socketId !== socket.id);
 
         //añadimos usuario al array 
         usuarios.push({
@@ -35,6 +34,8 @@ io.on('connection', (socket) => {
             avatar: datos.avatar,
             estado: datos.estado
         });
+
+        io.emit('usuarios_online', usuarios);
 
         //aviso general de que alguien entró al chat + aviso propio
         socket.emit('nuevo_mensaje', {
@@ -66,8 +67,8 @@ io.on('connection', (socket) => {
     //cuando un usuario se desconecta
     socket.on('disconnect', () => {
         if (socket.data.nombre) { //si llega a haber nombre, osea se ha regitrado
-            usuariosOnline--;
-            io.emit('usuarios_online', usuariosOnline);
+            usuarios = usuarios.filter(u => u.socketId !== socket.id);
+            io.emit('usuarios_online', usuarios);
             io.emit('nuevo_mensaje', {
                 tipo: 'sistema',
                 texto: socket.data.nombre + ' ha salido del chat'
