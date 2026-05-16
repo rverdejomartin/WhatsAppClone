@@ -78,3 +78,5 @@ npm run dev
 ```
 
 ## Capturas de la app
+![Login](imagen_2026-05-16_111008017.png)
+![Chat](imagen_2026-05-16_111030823.png)
