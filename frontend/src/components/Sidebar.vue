@@ -4,15 +4,17 @@ import { useRouter } from 'vue-router';
 import socket, { usuarioGlobal } from '../socket/socket';
 
 const desplegado = ref(false);
-const sidebarAbierto = ref(false);
 const router = useRouter();
 
 const props = defineProps({
     usuariosOnline: Array,
     nombre: String,
     avatarUrl: String,
-    estado: String
+    estado: String,
+    sidebarAbierto: Boolean
 });
+
+const emit = defineEmits(['cerrar']);
 
 const colorEstado = computed(() => {
     if (props.estado === 'Disponible') return '#00a884';
@@ -30,18 +32,9 @@ function cerrarSesion() {
 </script>
 
 <template>
-    <!-- Botón hamburguesa (solo visible en móvil) -->
-    <button class="btn-hamburguesa" @click="sidebarAbierto = true">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
-        </svg>
-    </button>
-
-    <!-- Overlay (solo en móvil cuando está abierto) -->
-    <div v-if="sidebarAbierto" class="overlay" @click="sidebarAbierto = false" />
+    <div v-if="sidebarAbierto" class="overlay" @click="emit('cerrar')" />
 
     <div class="sidebar" :class="{ abierto: sidebarAbierto }">
-
         <div class="perfil">
             <img :src="avatarUrl" class="avatar" />
             <div class="perfil-info">
@@ -91,7 +84,6 @@ function cerrarSesion() {
                 </div>
             </div>
         </div>
-
     </div>
 </template>
 
@@ -275,35 +267,34 @@ function cerrarSesion() {
     color: var(--color-texto-gris);
 }
 
-.btn-hamburguesa {
-  display: none;
+.overlay {
+    display: none;
 }
 
 @media (max-width: 768px) {
-  .btn-hamburguesa {
-    display: block;
-  }
+    .overlay {
+        display: block;
+        position: fixed;
+        inset: 0;
+        z-index: 99;
+        background: rgba(0, 0, 0, 0.4);
+    }
 
-  .sidebar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100dvh;
-    z-index: 100;
-    transform: translateX(-100%);
-    transition: transform 0.25s ease;
-  }
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 85%;
+        max-width: 320px;
+        height: 100dvh;
+        z-index: 100;
+        transform: translateX(-100%);
+        transition: transform 0.25s ease;
+        border-right: none;
+    }
 
-  .sidebar.abierto {
-    transform: translateX(0);
-  }
-
-  .overlay {
-    position: fixed;
-    inset: 0;
-    z-index: 99;
-    background: rgba(0, 0, 0, 0.4);
-  }
+    .sidebar.abierto {
+        transform: translateX(0);
+    }
 }
 </style>

@@ -7,6 +7,7 @@ import Sidebar from './Sidebar.vue';
 
 const mensajes = ref([]);
 const quienEscribe = ref('');
+const sidebarAbierto = ref(false);
 let timerEsribiendo = null;
 
 socket.on('nuevo_mensaje', (datos) => {
@@ -46,11 +47,18 @@ function escribiendo() {
 
 <template>
     <div class="chat-layout">
+        <button class="btn-hamburguesa" @click="sidebarAbierto = true">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+            </svg>
+        </button>
         <Sidebar
             :usuariosOnline="usuariosOnlineGlobal"
             :nombre="usuarioGlobal.nombre"
             :avatarUrl="usuarioGlobal.avatar"
             :estado="usuarioGlobal.estado"
+            :sidebarAbierto="sidebarAbierto"
+            @cerrar="sidebarAbierto = false"
         />
         <div class="chat-main">
             <div class="chat-header">
@@ -64,7 +72,6 @@ function escribiendo() {
         </div>
     </div>
 </template>
-
 
 <style scoped>
 .chat-layout {
@@ -126,29 +133,55 @@ function escribiendo() {
     border: 1px solid rgba(0, 168, 132, 0.25);
 }
 
+.btn-hamburguesa {
+    display: none;
+}
+
 @media (max-width: 768px) {
-  .chat-layout {
-    height: 100dvh; /* dvh en vez de vh para móvil */
-  }
+    .chat-layout {
+        height: 100dvh;
+    }
 
-  .chat-header {
-    padding: 0 1rem 0 4rem; /* espacio a la izquierda para el botón hamburguesa */
-  }
+    .btn-hamburguesa {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: fixed;
+        top: 1rem;
+        left: 1rem;
+        z-index: 101;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: var(--color-fondo-header);
+        border: none;
+        cursor: pointer;
+        color: var(--color-texto-claro);
+    }
 
-  .chat-titulo {
-    font-size: 0.95rem;
-  }
+    .btn-hamburguesa svg {
+        width: 22px;
+        height: 22px;
+    }
 
-  .chat-online {
-    font-size: 0.75rem;
-  }
+    .chat-header {
+        padding: 0 1rem 0 4rem;
+    }
 
-  .escribiendo.visible {
-    height: 32px;
-  }
+    .chat-titulo {
+        font-size: 0.95rem;
+    }
 
-  .escribiendo span {
-    font-size: 0.74rem;
-  }
+    .chat-online {
+        font-size: 0.75rem;
+    }
+
+    .escribiendo.visible {
+        height: 32px;
+    }
+
+    .escribiendo span {
+        font-size: 0.74rem;
+    }
 }
 </style>
