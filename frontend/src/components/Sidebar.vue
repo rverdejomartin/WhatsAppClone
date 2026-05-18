@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import socket, { usuarioGlobal } from '../socket/socket';
 
@@ -16,12 +16,12 @@ const props = defineProps({
 
 const emit = defineEmits(['cerrar']);
 
-const colorEstado = computed(() => {
-    if (props.estado === 'Disponible') return '#00a884';
-    if (props.estado === 'Ocupado') return '#f59e0b';
-    if (props.estado === 'No molestar') return '#ef4444';
+function getColorEstado(estado) {
+    if (estado === 'Disponible') return '#00a884';
+    if (estado === 'Ocupado') return '#f59e0b';
+    if (estado === 'No molestar') return '#ef4444';
     return '';
-});
+}
 
 function cerrarSesion() {
     localStorage.removeItem('whatsapp_user');
@@ -41,7 +41,7 @@ function cerrarSesion() {
                 <span class="perfil-nombre">{{ nombre }}</span>
                 <span class="perfil-estado">
                     <svg width="8" height="8" viewBox="0 0 12 12">
-                        <circle cx="6" cy="6" r="6" :fill="colorEstado"/>
+                        <circle cx="6" cy="6" r="6" :fill="getColorEstado(estado)"/>
                     </svg>
                     {{ estado }}
                 </span>
@@ -76,7 +76,7 @@ function cerrarSesion() {
                         <span class="usuario-nombre">{{ usuario.nombre }}</span>
                         <span class="usuario-estado">
                             <svg width="8" height="8" viewBox="0 0 12 12">
-                                <circle cx="6" cy="6" r="6" :fill="colorEstado"/>
+                                <circle cx="6" cy="6" r="6" :fill="getColorEstado(estado)"/>
                             </svg>
                             {{ usuario.estado }}
                         </span>
