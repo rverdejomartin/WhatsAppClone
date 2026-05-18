@@ -76,7 +76,7 @@ function cerrarSesion() {
                         <span class="usuario-nombre">{{ usuario.nombre }}</span>
                         <span class="usuario-estado">
                             <svg width="8" height="8" viewBox="0 0 12 12">
-                                <circle cx="6" cy="6" r="6" :fill="getColorEstado(estado)"/>
+                                <circle cx="6" cy="6" r="6" :fill="getColorEstado(usuario.estado)"/>
                             </svg>
                             {{ usuario.estado }}
                         </span>
