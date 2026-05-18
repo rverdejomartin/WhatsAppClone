@@ -4,7 +4,9 @@ import { useRouter } from 'vue-router';
 import socket, { usuarioGlobal } from '../socket/socket';
 
 const desplegado = ref(false);
+const sidebarAbierto = ref(false);
 const router = useRouter();
+
 const props = defineProps({
     usuariosOnline: Array,
     nombre: String,
@@ -13,15 +15,10 @@ const props = defineProps({
 });
 
 const colorEstado = computed(() => {
-    let color = '';
-    if (props.estado === 'Disponible'){
-        color = '#00a884';
-    } else if (props.estado === 'Ocupado') {
-        color = '#f59e0b';
-    } else if (props.estado === 'No molestar') {
-        color = '#ef4444';
-    }
-    return color;
+    if (props.estado === 'Disponible') return '#00a884';
+    if (props.estado === 'Ocupado') return '#f59e0b';
+    if (props.estado === 'No molestar') return '#ef4444';
+    return '';
 });
 
 function cerrarSesion() {
@@ -33,57 +30,69 @@ function cerrarSesion() {
 </script>
 
 <template>
-    <div class="sidebar">
+    <!-- Botón hamburguesa (solo visible en móvil) -->
+    <button class="btn-hamburguesa" @click="sidebarAbierto = true">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+        </svg>
+    </button>
 
-    <div class="perfil">
-        <img :src="avatarUrl" class="avatar" />
-        <div class="perfil-info">
-            <span class="perfil-nombre">{{ nombre }}</span>
-            <span class="perfil-estado">
-                <svg width="8" height="8" viewBox="0 0 12 12">
-                    <circle cx="6" cy="6" r="6" :fill="colorEstado"/>
-                </svg>
-                {{ estado }}</span>
-        </div>
-        <button class="btn-logout" @click="cerrarSesion" title="Cerrar sesión">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5-5-5zm-5 10H5V7h7V5H5c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h7v-2z"/>
-            </svg>
-        </button>
-    </div>
+    <!-- Overlay (solo en móvil cuando está abierto) -->
+    <div v-if="sidebarAbierto" class="overlay" @click="sidebarAbierto = false" />
 
-    <div class="chats">
-        <div class="chat-item" @click="desplegado = !desplegado">
-            <div class="chat-item-icono">
+    <div class="sidebar" :class="{ abierto: sidebarAbierto }">
+
+        <div class="perfil">
+            <img :src="avatarUrl" class="avatar" />
+            <div class="perfil-info">
+                <span class="perfil-nombre">{{ nombre }}</span>
+                <span class="perfil-estado">
+                    <svg width="8" height="8" viewBox="0 0 12 12">
+                        <circle cx="6" cy="6" r="6" :fill="colorEstado"/>
+                    </svg>
+                    {{ estado }}
+                </span>
+            </div>
+            <button class="btn-logout" @click="cerrarSesion" title="Cerrar sesión">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/>
+                    <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5-5-5zm-5 10H5V7h7V5H5c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h7v-2z"/>
                 </svg>
-            </div>
-            <div class="chat-item-info">
-                <span class="chat-item-nombre">Chat grupal</span>
-                <span class="chat-item-usuarios">{{ usuariosOnline.length }} usuarios en línea</span>
-            </div>
-            <svg class="flecha" :class="{ rotada: desplegado }" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M7 10l5 5 5-5z"/>
-            </svg>
+            </button>
         </div>
 
-        <div v-if="desplegado" class="lista-usuarios">
-            <div v-for="usuario in usuariosOnline" :key="usuario.socketId" class="usuario-item">
-                <img :src="usuario.avatar" class="usuario-avatar" />
-                <div class="usuario-info">
-                    <span class="usuario-nombre">{{ usuario.nombre }}</span>
-                    <span class="usuario-estado">
-                        <svg width="8" height="8" viewBox="0 0 12 12">
-                            <circle cx="6" cy="6" r="6" :fill="colorEstado"/>
-                        </svg>
-                        {{ usuario.estado }}</span>
+        <div class="chats">
+            <div class="chat-item" @click="desplegado = !desplegado">
+                <div class="chat-item-icono">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/>
+                    </svg>
+                </div>
+                <div class="chat-item-info">
+                    <span class="chat-item-nombre">Chat grupal</span>
+                    <span class="chat-item-usuarios">{{ usuariosOnline.length }} usuarios en línea</span>
+                </div>
+                <svg class="flecha" :class="{ rotada: desplegado }" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M7 10l5 5 5-5z"/>
+                </svg>
+            </div>
+
+            <div v-if="desplegado" class="lista-usuarios">
+                <div v-for="usuario in usuariosOnline" :key="usuario.socketId" class="usuario-item">
+                    <img :src="usuario.avatar" class="usuario-avatar" />
+                    <div class="usuario-info">
+                        <span class="usuario-nombre">{{ usuario.nombre }}</span>
+                        <span class="usuario-estado">
+                            <svg width="8" height="8" viewBox="0 0 12 12">
+                                <circle cx="6" cy="6" r="6" :fill="colorEstado"/>
+                            </svg>
+                            {{ usuario.estado }}
+                        </span>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-</div>
+    </div>
 </template>
 
 <style scoped>
@@ -264,5 +273,37 @@ function cerrarSesion() {
 .usuario-estado {
     font-size: 0.72rem;
     color: var(--color-texto-gris);
+}
+
+.btn-hamburguesa {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .btn-hamburguesa {
+    display: block;
+  }
+
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100dvh;
+    z-index: 100;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+  }
+
+  .sidebar.abierto {
+    transform: translateX(0);
+  }
+
+  .overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 99;
+    background: rgba(0, 0, 0, 0.4);
+  }
 }
 </style>

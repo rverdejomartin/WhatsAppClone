@@ -272,4 +272,54 @@ h1 {
   background-color: var(--color-primary);
   color: white;
 }
+
+/* ── Móvil ── */
+@media (max-width: 768px) {
+  .login-page {
+    align-items: flex-start;
+    padding: 1.5rem 1rem;
+    min-height: 100dvh;
+    height: auto;
+  }
+
+  .login-card {
+    padding: 1.5rem 1.25rem;
+    gap: 1.25rem;
+    border-radius: 8px;
+  }
+
+  h1 {
+    font-size: 1.3rem;
+  }
+
+  .campo input {
+    font-size: 1rem; /* evita el zoom automático de iOS */
+    padding: 0.7rem 0.9rem;
+  }
+
+  .avatar {
+    width: 52px;
+    height: 52px;
+  }
+
+  .avatares {
+    gap: 0.6rem;
+  }
+
+  .estados {
+    flex-wrap: wrap;
+  }
+
+  .estado-btn {
+    flex: 1;
+    justify-content: center;
+    font-size: 0.8rem;
+    padding: 0.5rem 0.5rem;
+  }
+
+  .btn-entrar {
+    font-size: 1rem;
+    padding: 0.9rem;
+  }
+}
 </style>

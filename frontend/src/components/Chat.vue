@@ -125,4 +125,30 @@ function escribiendo() {
     border-radius: 9999px;
     border: 1px solid rgba(0, 168, 132, 0.25);
 }
+
+@media (max-width: 768px) {
+  .chat-layout {
+    height: 100dvh; /* dvh en vez de vh para móvil */
+  }
+
+  .chat-header {
+    padding: 0 1rem 0 4rem; /* espacio a la izquierda para el botón hamburguesa */
+  }
+
+  .chat-titulo {
+    font-size: 0.95rem;
+  }
+
+  .chat-online {
+    font-size: 0.75rem;
+  }
+
+  .escribiendo.visible {
+    height: 32px;
+  }
+
+  .escribiendo span {
+    font-size: 0.74rem;
+  }
+}
 </style>

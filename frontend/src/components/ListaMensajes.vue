@@ -83,4 +83,24 @@ function irAlFondo() {
     width: 20px;
     height: 20px;
 }
+
+@media (max-width: 768px) {
+  .message-list {
+    padding: 0.75rem;
+    gap: 0.2rem;
+  }
+
+  /* La flecha no choque con el input si tiene altura variable */
+  .flecha-abajo {
+    bottom: 0.75rem;
+    right: 0.75rem;
+    width: 36px;
+    height: 36px;
+  }
+
+  .flecha-abajo svg {
+    width: 18px;
+    height: 18px;
+  }
+}
 </style>

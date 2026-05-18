@@ -95,4 +95,19 @@ defineProps({
     font-size: 0.9rem;
     line-height: 1.4;
 }
+
+@media (max-width: 768px) {
+  .mensaje-wrapper {
+    max-width: 88%;
+  }
+
+  .texto {
+    font-size: 0.875rem; /* prácticamente igual, pero respeta el zoom del usuario */
+  }
+
+  .avatar {
+    width: 28px;
+    height: 28px;
+  }
+}
 </style>

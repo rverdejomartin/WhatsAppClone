@@ -82,4 +82,30 @@ button svg {
 button:hover {
     background-color: var(--color-primary-dark);
 }
+
+@media (max-width: 768px) {
+  .input-bar {
+    padding: 0.5rem 0.75rem;
+    gap: 0.5rem;
+    /* Evita que el teclado virtual tape el input */
+    position: sticky;
+    bottom: 0;
+  }
+
+  input {
+    font-size: 1rem; /* clave: evita el zoom automático de iOS */
+    padding: 0.55rem 0.9rem;
+  }
+
+  button {
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+  }
+
+  button svg {
+    width: 18px;
+    height: 18px;
+  }
+}
 </style>
