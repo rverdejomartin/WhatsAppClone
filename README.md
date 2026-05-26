@@ -1,7 +1,4 @@
 # WhatsApp Dude? 💬 
-
-LINK PRODUCCIÓN: https://whatsappclone-frontend-3rat.onrender.com
-
 Clon de WhatsApp Web desarrollado como proyecto de clase. Permite a varios usuarios conectarse en tiempo real y chatear en una sala común.
 
 ## 🌐 URL en producción
